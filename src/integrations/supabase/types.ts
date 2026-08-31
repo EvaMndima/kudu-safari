@@ -195,7 +195,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      current_operator_id: { Args: never; Returns: string }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
