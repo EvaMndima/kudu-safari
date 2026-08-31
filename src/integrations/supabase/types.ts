@@ -14,13 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string
+          departure_id: string
+          deposit_cents: number
+          deposit_status: string
+          guest_email: string
+          guest_name: string
+          guests: number
+          id: string
+          operator_id: string
+          reference: string
+          status: string
+          trip_id: string
+        }
+        Insert: {
+          created_at?: string
+          departure_id: string
+          deposit_cents: number
+          deposit_status?: string
+          guest_email: string
+          guest_name: string
+          guests?: number
+          id?: string
+          operator_id: string
+          reference?: string
+          status?: string
+          trip_id: string
+        }
+        Update: {
+          created_at?: string
+          departure_id?: string
+          deposit_cents?: number
+          deposit_status?: string
+          guest_email?: string
+          guest_name?: string
+          guests?: number
+          id?: string
+          operator_id?: string
+          reference?: string
+          status?: string
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_departure_id_fkey"
+            columns: ["departure_id"]
+            isOneToOne: false
+            referencedRelation: "departures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "operators"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      departures: {
+        Row: {
+          created_at: string
+          departs_on: string
+          id: string
+          seats_taken: number
+          seats_total: number
+          trip_id: string
+        }
+        Insert: {
+          created_at?: string
+          departs_on: string
+          id?: string
+          seats_taken?: number
+          seats_total?: number
+          trip_id: string
+        }
+        Update: {
+          created_at?: string
+          departs_on?: string
+          id?: string
+          seats_taken?: number
+          seats_total?: number
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departures_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operators: {
+        Row: {
+          claim_code: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string | null
+        }
+        Insert: {
+          claim_code: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string | null
+        }
+        Update: {
+          claim_code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      trips: {
+        Row: {
+          created_at: string
+          days: number
+          deposit_pct: number
+          id: string
+          image_key: string
+          operator_id: string
+          price_cents: number
+          region: string
+          slug: string
+          summary: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          days: number
+          deposit_pct?: number
+          id?: string
+          image_key: string
+          operator_id: string
+          price_cents: number
+          region: string
+          slug: string
+          summary: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          days?: number
+          deposit_pct?: number
+          id?: string
+          image_key?: string
+          operator_id?: string
+          price_cents?: number
+          region?: string
+          slug?: string
+          summary?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trips_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "operators"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_operator_id: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
