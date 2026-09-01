@@ -87,21 +87,22 @@ export const createBooking = createServerFn({ method: "POST" })
     };
     const depositCents = Math.round((trip.price_cents * trip.deposit_pct) / 100) * data.guests;
 
-    const { data: booking, error } = await supabase
-      .from("bookings")
-      .insert({
-        operator_id: trip.operator_id,
-        trip_id: trip.id,
-        departure_id: departure.id,
-        guest_name: data.guestName,
-        guest_email: data.guestEmail,
-        guests: data.guests,
-        deposit_cents: depositCents,
-        status: "pending",
-      })
-      .select("reference, deposit_cents, guests")
-      .single();
+    // Anonymous guests may insert but not read bookings, so the reference is
+    // generated here rather than read back from the row.
+    const reference = `KUD-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const { error } = await supabase.from("bookings").insert({
+      reference,
+      operator_id: trip.operator_id,
+      trip_id: trip.id,
+      departure_id: departure.id,
+      guest_name: data.guestName,
+      guest_email: data.guestEmail,
+      guests: data.guests,
+      deposit_cents: depositCents,
+      status: "pending",
+    });
     if (error) throw new Error(error.message);
 
-    return booking;
+    return { reference, deposit_cents: depositCents, guests: data.guests };
   });
